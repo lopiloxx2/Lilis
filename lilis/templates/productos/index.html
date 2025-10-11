@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lilis - Dulces</title>
+
+    <!-- Fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- CSS externo -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Lilis - Dulces Artesanales</h1>
+    </header>
+
+    <main>
+        <nav>
+            <ul>
+                <li><a href="{% url 'lista_productos' %}">Ver Productos</a></li>
+                <li><a href="{% url 'lista_clientes' %}">Ver Clientes</a></li>
+                <li><a href="{% url 'lista_ventas' %}">Ver Ventas</a></li>
+            </ul>
+        </nav>
+
+        <section class="bienvenida">
+            <h2>Bienvenido a Lilis</h2>
+            <p>Deléitate con nuestros alfajores, cuchuflís y dulces hechos con amor 💖</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 Lilis - Dulces Artesanales</p>
+    </footer>
+</body>
+</html>

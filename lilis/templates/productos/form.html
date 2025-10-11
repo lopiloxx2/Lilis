@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ titulo }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        h1 { color: #d63384; }
+        form { max-width: 500px; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input, select, textarea {
+            width: 100%; padding: 8px; margin-top: 5px;
+            border: 1px solid #ccc; border-radius: 4px;
+        }
+        button {
+            margin-top: 15px; background-color: #d63384; color: white;
+            padding: 10px 15px; border: none; border-radius: 5px;
+        }
+        button:hover { background-color: #b62a6f; }
+    </style>
+</head>
+<body>
+    <h1>{{ titulo }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar</button>
+        <a href="{% url 'lista_productos' %}" style="margin-left: 10px;">Cancelar</a>
+    </form>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clientes - Lilis</title>
+</head>
+<body>
+    <h1>Lista de Clientes</h1>
+    <table border="1">
+        <tr>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Teléfono</th>
+            <th>Dirección</th>
+        </tr>
+        {% for c in clientes %}
+        <tr>
+            <td>{{ c.nombre }}</td>
+            <td>{{ c.correo }}</td>
+            <td>{{ c.telefono }}</td>
+            <td>{{ c.direccion }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

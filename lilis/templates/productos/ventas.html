@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ventas - Lilis</title>
+</head>
+<body>
+    <h1>Lista de Ventas</h1>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Fecha</th>
+            <th>Total</th>
+        </tr>
+        {% for v in ventas %}
+        <tr>
+            <td>{{ v.id }}</td>
+            <td>{{ v.cliente.nombre }}</td>
+            <td>{{ v.fecha }}</td>
+            <td>${{ v.total }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
