@@ -21,11 +21,26 @@
 - Usuarios y Seguridad
 
 
+
 ## 🛠️ Requisitos
 
 - Python 3.10+
 - Django (versión recomendada: 4.2+)
+- Git
 - Entorno virtual (recomendado)
+
+## 🧰 Instalación de Git
+
+Para clonar este repositorio o contribuir al proyecto, necesitas tener **Git** instalado en tu sistema.
+
+### 🔧 Windows
+
+1. Descarga el instalador desde [git-scm.com](https://git-scm.com/download/win).
+2. Ejecuta el instalador y sigue los pasos recomendados.
+3. Verifica la instalación con:
+
+```bash
+git --version
 
 ## ⚙️ Instalación rápida
 
