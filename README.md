@@ -45,7 +45,7 @@ git --version
 ## ⚙️ Instalación rápida
 
 ```bash
-git clone https://github.com/tu-usuario/erp-lilis.git
+git clone https://github.com/lopiloxx2/lilis.git
 cd erp-lilis
 python -m venv env
 source env/bin/activate  # o .\env\Scripts\activate en Windows
