@@ -19,6 +19,7 @@
 - Producción  
 - Inventario  
 - Usuarios y Seguridad
+- Proveedores
 
 
 
