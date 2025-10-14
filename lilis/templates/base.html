@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}ERP Lili's{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% load static %}
+
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* Paleta personalizada */
+        :root {
+            --rojo-lilis: #b71c1c;
+            --dorado-lilis: #d4af37;
+        }
+
+        .navbar {
+            background-color: var(--rojo-lilis);
+        }
+
+        .navbar-brand, .nav-link, .navbar-text {
+            color: var(--dorado-lilis) !important;
+            font-weight: bold;
+        }
+
+        .nav-link:hover {
+            color: #fff !important;
+        }
+
+        footer {
+            background-color: var(--rojo-lilis);
+            color: var(--dorado-lilis);
+            padding: 1rem;
+            text-align: center;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <!-- Logo -->
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'lista_proveedores' %}">
+                <img src="{% static 'img/lilis_logo.png' %}" alt="Lili's Logo" width="40" height="40" class="me-2">
+                Lili's ERP
+            </a>
+
+            <!-- Botón responsive -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_proveedores' %}">Proveedores</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_clientes' %}">Clientes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_ventas' %}">Ventas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_productos' %}">Productos</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido dinámico -->
+    <main class="container mt-4">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Lili's Dulcería Artesanal - ERP</p>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
