@@ -1,15 +1,104 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
 <div class="container mt-4">
     <h2>Formulario de Proveedor</h2>
     <form method="post">
         {% csrf_token %}
         <div class="card p-4 shadow-sm">
-        {{ form.as_p }}
-        <div class="mt-3">
-            <button type="submit" class="btn btn-primary">Guardar</button>
-            <a href="{% url 'lista_proveedores' %}" class="btn btn-secondary">Cancelar</a>
-        </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    {{ form.rut.label_tag }}
+                    {{ form.rut }}
+                    {% if form.rut.errors %}
+                        <div class="text-danger">{{ form.rut.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6 mb-3">
+                    {{ form.razon_social.label_tag }}
+                    {{ form.razon_social }}
+                    {% if form.razon_social.errors %}
+                        <div class="text-danger">{{ form.razon_social.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    {{ form.nombre_fantasia.label_tag }}
+                    {{ form.nombre_fantasia }}
+                </div>
+                <div class="col-md-6 mb-3">
+                    {{ form.email.label_tag }}
+                    {{ form.email }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    {{ form.telefono.label_tag }}
+                    {{ form.telefono }}
+                </div>
+                <div class="col-md-6 mb-3">
+                    {{ form.direccion.label_tag }}
+                    {{ form.direccion }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    {{ form.ciudad.label_tag }}
+                    {{ form.ciudad }}
+                </div>
+                <div class="col-md-4 mb-3">
+                    {{ form.pais.label_tag }}
+                    {{ form.pais }}
+                </div>
+                <div class="col-md-4 mb-3">
+                    {{ form.plazos_pago.label_tag }}
+                    {{ form.plazos_pago }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    {{ form.moneda.label_tag }}
+                    {{ form.moneda }}
+                </div>
+                <div class="col-md-6 mb-3">
+                    {{ form.descuentos.label_tag }}
+                    {{ form.descuentos }}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    {{ form.costo_promedio.label_tag }}
+                    {{ form.costo_promedio }}
+                </div>
+                <div class="col-md-6 mb-3">
+                    {{ form.lead_time.label_tag }}
+                    {{ form.lead_time }}
+                </div>
+            </div>
+
+            <!-- Campo especial con tooltip -->
+            <div class="mb-3 form-check">
+                <label for="{{ form.proveedor_preferente.id_for_label }}" class="form-check-label">
+                    {{ form.proveedor_preferente }}
+                    Proveedor Preferente
+                    <span data-bs-toggle="tooltip" data-bs-placement="right"
+                          title="Marca este proveedor como el principal recomendado para compras.">
+                        <i class="bi bi-question-circle-fill text-warning"></i>
+                    </span>
+                </label>
+            </div>
+
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a href="{% url 'lista_proveedores' %}" class="btn btn-secondary">Cancelar</a>
+            </div>
         </div>
     </form>
 </div>

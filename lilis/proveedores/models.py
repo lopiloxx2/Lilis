@@ -1,13 +1,39 @@
 from django.db import models
 from django.core.validators import RegexValidator
+from pydantic import ValidationError
 
 solo_numeros = RegexValidator(r'^[0-9]+$', 'Solo se permiten números.')
 
+def validar_rut(rut):
+    rut = rut.upper().replace(".", "").replace("-", "")
+    cuerpo, dv = rut[:-1], rut[-1]
+
+    suma = 0
+    multiplo = 2
+    for c in reversed(cuerpo):
+        suma += int(c) * multiplo
+        multiplo = 9 if multiplo == 7 else multiplo + 1
+
+    resto = suma % 11
+    digito = 11 - resto
+    if digito == 11:
+        digito = "0"
+    elif digito == 10:
+        digito = "K"
+    else:
+        digito = str(digito)
+
+    if dv != digito:
+        raise ValidationError("El RUT ingresado no es válido.")
+
+
+
+
 class Proveedor(models.Model):
     # Identificación
-    rut = models.CharField(max_length=12, validators=[solo_numeros])
+    rut = models.CharField(max_length=12, validators=[validar_rut])
     telefono = models.CharField(max_length=15, blank=True, null=True, validators=[solo_numeros])
-    nombre_fantasia = models.CharField(max_length=255, blank=True, null=True)
+    razon_social = models.CharField(max_length=255, blank=True, null=True)
 
     # Contacto
     email = models.EmailField()
