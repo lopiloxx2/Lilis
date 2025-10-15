@@ -1,5 +1,5 @@
 from django import forms
-from .models import Proveedor
+from .models import Proveedor, validar_rut
 
 
 class ProveedorForm(forms.ModelForm):
@@ -7,11 +7,13 @@ class ProveedorForm(forms.ModelForm):
         model = Proveedor
         fields = '__all__'
         widgets = {
-            'rut': forms.TextInput(attrs={
+            'rut': forms.TextInput(
+                attrs={
                 'class': 'form-control',
                 'required': 'required',
                 'pattern': '[0-9Kk]+',
                 'title': 'Ingrese solo números y K si corresponde'
+                
             }),
             'razon_social': forms.TextInput(attrs={'class': 'form-control'}),
             'nombre_fantasia': forms.TextInput(attrs={'class': 'form-control'}),

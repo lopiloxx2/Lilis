@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import RegexValidator
-from pydantic import ValidationError
+from django.core.exceptions import ValidationError
 
 solo_numeros = RegexValidator(r'^[0-9]+$', 'Solo se permiten números.')
 

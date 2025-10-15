@@ -1,19 +1,16 @@
-// validaciones.js
-
-// Validación de RUT en frontend
 document.addEventListener("DOMContentLoaded", function () {
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl)
     });
-
+    
     const rutInput = document.getElementById("id_rut");
 
     if (rutInput) {
         rutInput.addEventListener("blur", function () {
             const valor = rutInput.value.trim().toUpperCase();
 
-            // Regex simple: números + K
+            
             const regex = /^[0-9]+[0-9K]$/;
 
             if (!regex.test(valor)) {
