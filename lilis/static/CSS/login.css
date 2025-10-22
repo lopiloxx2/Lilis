@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #6e00ff, #00e6ac);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+    width: 900px;
+    display: flex;
+    overflow: hidden;
+}
+
+.login-box {
+    display: flex;
+    width: 100%;
+}
+
+.login-left {
+    background: #f8f8f8;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-left .circle img {
+    width: 150px;
+    opacity: 0.9;
+}
+
+.login-right {
+    flex: 1;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+h2 {
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 15px;
+    border-radius: 30px;
+    border: none;
+    background: #f0f0f0;
+    font-size: 16px;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 15px;
+    border-radius: 30px;
+    border: none;
+    background: #32cd32;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-login:hover {
+    background: #28a428;
+}
+
+.forgot, .create-account {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.forgot a, .create-account a {
+    color: #444;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.forgot a:hover, .create-account a:hover {
+    color: #32cd32;
+}

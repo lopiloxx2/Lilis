@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+    <div class="login-box d-flex shadow rounded overflow-hidden">
+        <!-- Lado izquierdo con logo -->
+        <div class="login-left bg-light d-flex align-items-center justify-content-center p-4">
+            <div class="circle">
+                <img src="{% static 'img/lilis_logo.png' %}" alt="Login Icon" class="img-fluid" style="max-width: 120px;">
+            </div>
+        </div>
+
+        <!-- Lado derecho con formulario -->
+        <div class="login-right p-4 flex-grow-1">
+            <h2 class="mb-4">Iniciar sesión</h2>
+
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="login">
+                <div class="mb-3">
+                    <input type="text" name="username" class="form-control" placeholder="Usuario" required>
+                </div>
+                <div class="mb-3">
+                    <input type="password" name="password" class="form-control" placeholder="Contraseña" required>
+                </div>
+                <button type="submit" class="btn btn-warning w-100">Entrar</button>
+            </form>
+
+            <div class="mt-3 text-center">
+                <p class="mb-1">
+                    <a href="javascript:void(0)">¿Olvidaste tu usuario o contraseña?</a>
+                </p>
+                <p>
+                    <a href="{% url 'login_registro' %}">Crear nuevo usuario →</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
