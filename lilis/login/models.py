@@ -10,7 +10,8 @@ def validar_rut(rut):
     multiplo = 2
     for c in reversed(cuerpo):
         suma += int(c) * multiplo
-        multiplo = 9 if multiplo == 7 else multiplo + 1
+        # Ciclo de multiplicadores 2,3,4,5,6,7,2,3,...
+        multiplo = 2 if multiplo == 7 else multiplo + 1
 
     resto = suma % 11
     digito = 11 - resto
