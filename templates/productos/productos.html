@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Lista de Productos 🍬</h1>
+
+    <!-- Buscador en tiempo real -->
+    <form class="mb-3">
+        <div class="input-group">
+            <input type="text"
+                   name="q"
+                   value="{{ query }}"
+                   class="form-control"
+                   placeholder="Buscar por nombre, SKU o marca"
+                   hx-get="{% url 'lista_productos' %}"
+                   hx-trigger="keyup changed delay:300ms"
+                   hx-target="#grid">
+        </div>
+    </form>
+
+    <!-- Acciones -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="{% url 'crear_producto' %}" class="btn btn-primary">➕ Agregar Producto</a>
+        <a href="{% url 'exportar_productos_excel' %}?q={{ query }}" class="btn btn-outline-primary">Exportar a Excel</a>
+    </div>
+
+    <!-- Grilla -->
+    <div id="grid" hx-swap="outerHTML">
+        {% include 'productos/_grid.html' with page_obj=page_obj query=query %}
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'inicio' %}" class="btn btn-secondary">⬅️ Volver al Inicio</a>
+    </div>
+</div>
+{% endblock %}
+
+

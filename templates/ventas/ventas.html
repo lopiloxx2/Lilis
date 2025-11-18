@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Lista de Ventas 🧾</h1>
+
+    <form class="mb-3">
+        <div class="input-group">
+            <input type="text"
+                   name="q"
+                   value="{{ query }}"
+                   class="form-control"
+                   placeholder="Buscar por ID, fecha o total"
+                   hx-get="{% url 'lista_ventas' %}"
+                   hx-trigger="keyup changed delay:300ms"
+                   hx-target="#grid_ventas">
+        </div>
+    </form>
+
+    <div class="d-flex justify-content-between mb-3">
+        <a href="{% url 'exportar_ventas_excel' %}?q={{ query }}" class="btn btn-outline-success">Exportar a Excel</a>
+        <a href="{% url 'inicio' %}" class="btn btn-secondary">Volver al Inicio</a>
+    </div>
+
+    <div id="grid_ventas" hx-swap="outerHTML">
+        {% include 'ventas/_grid_ventas.html' with page_obj=page_obj query=query %}
+    </div>
+</div>
+{% endblock %}

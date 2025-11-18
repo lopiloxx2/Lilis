@@ -1,0 +1,51 @@
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>RUT</th>
+            <th>Razón Social</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Ciudad</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for proveedor in page_obj.object_list %}
+        <tr>
+            <td>{{ proveedor.rut }}</td>
+            <td>{{ proveedor.razon_social }}</td>
+            <td>{{ proveedor.email }}</td>
+            <td>{{ proveedor.telefono }}</td>
+            <td>{{ proveedor.ciudad }}</td>
+            <td>
+                <a href="{% url 'editar_proveedor' proveedor.pk %}" class="btn btn-sm btn-warning">Editar</a>
+                <a href="{% url 'eliminar_proveedor' proveedor.pk %}" class="btn btn-sm btn-danger">Eliminar</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="text-center text-muted">Sin resultados</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<nav aria-label="Paginación">
+  <ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+      <li class="page-item">
+        <a class="page-link"
+           hx-get="{% url 'lista_proveedores' %}?q={{ query }}&page={{ page_obj.previous_page_number }}"
+           hx-target="#grid">Anterior</a>
+      </li>
+    {% endif %}
+    <li class="page-item disabled">
+      <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+    </li>
+    {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link"
+           hx-get="{% url 'lista_proveedores' %}?q={{ query }}&page={{ page_obj.next_page_number }}"
+           hx-target="#grid">Siguiente</a>
+      </li>
+    {% endif %}
+  </ul>
+</nav>

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Lista de Usuarios 👥</h1>
+
+    <!-- Buscador -->
+    <form class="mb-3">
+        <div class="input-group">
+            <input type="text"
+                   name="q"
+                   value="{{ query }}"
+                   class="form-control"
+                   placeholder="Buscar por username, email, nombres, apellidos o teléfono"
+                   hx-get="{% url 'lista_usuarios' %}"
+                   hx-trigger="keyup changed delay:300ms"
+                   hx-target="#grid_usuarios">
+        </div>
+    </form>
+
+    <!-- Acciones -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="{% url 'crear_usuario' %}" class="btn btn-success">➕ Nuevo Usuario</a>
+        <a href="{% url 'exportar_usuarios_excel' %}?q={{ query }}" class="btn btn-outline-primary">Exportar a Excel</a>
+    </div>
+
+    <!-- Grilla -->
+    <div id="grid_usuarios" hx-swap="outerHTML">
+        {% include 'usuarios/_grid_usuarios.html' with page_obj=page_obj query=query %}
+    </div>
+</div>
+{% endblock %}
