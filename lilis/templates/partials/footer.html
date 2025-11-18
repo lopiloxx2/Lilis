@@ -1,0 +1,113 @@
+<style>
+  footer {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    display: block;
+  }
+
+  .footer {
+    width: 100%;
+    padding: 20px 40px;             /* Más compacto */
+    background: #2b150c;
+    display: flex;                   /* Alinear horizontal */
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;                       /* Reduce separación */
+    flex-wrap: nowrap;               /* Evita que crezca en altura */
+  }
+
+  .footer-section {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .footer-section h3 {
+    margin-bottom: 10px;
+    font-weight: bold;
+    border-bottom: 2px solid #8b6a4a;
+    display: inline-block;
+    padding-bottom: 4px;
+    color: #fff;
+  }
+
+  .footer-section p,
+  .footer-section a {
+    margin: 6px 0;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .payments img {
+    margin-right: 6px;
+    height: 24px;    /* Más pequeño */
+  }
+
+  .footer-section img {
+    max-width: 150px; /* Logo más compacto */
+    margin-bottom: 12px;
+  }
+
+  iframe {
+    width: 100%;
+    height: 120px;     /* Menos alto */
+    border: 0;
+  }
+
+  .footer-bottom {
+    text-align: center;
+    padding: 12px;     /* Más pequeño */
+    background: #1f0e07;
+    color: #d5c3ac;
+    font-size: 14px;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
+</style>
+
+<footer>
+  <div class="footer">
+    <div class="footer-section">
+      <img src="/static/img/lilis_logo.png" alt="Logo Lili's" />
+    </div>
+
+    <div class="footer-section">
+      <h3>INFO DE CONTACTO</h3>
+      <p>Móvil: +569 6226 1712</p>
+      <p>E-Mail: ventas@lilis.cl</p>
+      <p>Ubícanos en: <strong>Paseo San Ramón</strong></p>
+      <p>Waldo Alcalde 401, local 8, San Ramón, Coquimbo</p>
+
+      <div class="payments">
+        <img src="/static/webpay.png" />
+        <img src="/static/amex.png" />
+        <img src="/static/mastercard.png" />
+        <img src="/static/visa.png" />
+      </div>
+    </div>
+
+    <div class="footer-section">
+      <h3>LINK DE INTERÉS</h3>
+      <p><a href="#">Mi cuenta</a></p>
+      <p><a href="#">Contacto</a></p>
+      <p><a href="#">Política de Privacidad</a></p>
+      <p><a href="#">Términos y condiciones</a></p>
+    </div>
+
+    <div class="footer-section">
+      <h3>ENCUÉNTRANOS EN:</h3>
+      <iframe 
+        src="https://www.google.com/maps/place/Paseo+San+Ram%C3%B3n+Coquimbo/@-29.978164,-71.26272,25661m/data=!3m1!1e3!4m6!3m5!1s0x9691cb5a9bac0653:0x505a7688ca112b1a!8m2!3d-29.978164!4d-71.2627205!16s%2Fg%2F11trxd39pp"
+        allowfullscreen loading="lazy">
+      </iframe>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    Derechos Reservados © 2022 Lilis. Desarrollado por D.B.L
+  </div>
+</footer>
+  
