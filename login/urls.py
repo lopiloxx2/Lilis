@@ -1,8 +1,10 @@
 from django.urls import path
 from . import views
-from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     path('', views.login_registro_view, name='login_registro'),
-   # path('logout/', LogoutView.as_view(next_page='login_registro'), name='logout'),
+    path('logout/', views.logout_view, name='logout'),
+    path('change-password/', views.change_password_view, name='change_password'),
+    path('forgot/', views.forgot_password_view, name='forgot_password'),
+    path('reset/<str:uidb64>/<str:token>/', views.password_reset_confirm_view, name='password_reset_confirm'),
 ]

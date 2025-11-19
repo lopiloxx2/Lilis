@@ -83,11 +83,15 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_proveedores' %}">Proveedores</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_usuarios' %}">Usuarios</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_ventas' %}">Ventas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_productos' %}">Productos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'login_registro' %}">Iniciar sesión</a></li>
+                    {% if request.user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'lista_proveedores' %}">Proveedores</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'lista_usuarios' %}">Usuarios</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'lista_ventas' %}">Ventas</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'lista_productos' %}">Productos</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Salir</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'login_registro' %}">Iniciar sesión</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

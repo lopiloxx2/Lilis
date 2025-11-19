@@ -20,7 +20,7 @@
     <!-- Acciones -->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <a href="{% url 'crear_usuario' %}" class="btn btn-success">➕ Nuevo Usuario</a>
-        <a href="{% url 'exportar_usuarios_excel' %}?q={{ query }}" class="btn btn-outline-primary">Exportar a Excel</a>
+        <a href="#" data-export-url="{% url 'exportar_usuarios_excel' %}" class="btn btn-outline-primary export-btn">Exportar a Excel</a>
     </div>
 
     <!-- Grilla -->
@@ -28,4 +28,18 @@
         {% include 'usuarios/_grid_usuarios.html' with page_obj=page_obj query=query %}
     </div>
 </div>
+<script>
+(function(){
+    const exportBtn = document.querySelector('.export-btn');
+    if(!exportBtn) return;
+    exportBtn.addEventListener('click', function(e){
+        e.preventDefault();
+        const base = this.getAttribute('data-export-url');
+        const qInput = document.querySelector('input[name="q"]');
+        const q = qInput ? encodeURIComponent(qInput.value || '') : '';
+        const url = q ? `${base}?q=${q}` : base;
+        window.location.href = url;
+    });
+})();
+</script>
 {% endblock %}

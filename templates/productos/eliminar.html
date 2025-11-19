@@ -1,25 +1,22 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Eliminar Producto</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 40px; }
-        h1 { color: #dc3545; }
-        button {
-            background-color: #dc3545; color: white;
-            padding: 8px 12px; border: none; border-radius: 5px;
-        }
-        button:hover { background-color: #a71d2a; }
-    </style>
-</head>
-<body>
-    <h1>¿Eliminar Producto?</h1>
-    <p>¿Seguro que deseas eliminar <strong>{{ producto.nombre }}</strong>?</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Sí, eliminar</button>
-        <a href="{% url 'lista_productos' %}" style="margin-left: 10px;">Cancelar</a>
-    </form>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-danger shadow-sm">
+                <div class="card-header bg-danger text-white">
+                    <strong>Eliminar Producto</strong>
+                </div>
+                <div class="card-body">
+                    <p>¿Seguro que deseas eliminar <strong>{{ producto.nombre }}</strong> (SKU: {{ producto.sku }})?</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+                        <a href="{% url 'lista_productos' %}" class="btn btn-secondary ms-2">Cancelar</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

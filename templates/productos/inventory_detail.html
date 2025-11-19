@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-3">
+    <h3>Movimiento: {{ movimiento.get_tipo_display }} - {{ movimiento.fecha }}</h3>
+    <p><strong>Referencia:</strong> {{ movimiento.referencia }} | <strong>Usuario:</strong> {{ movimiento.usuario }}</p>
+    <p><strong>Bodega origen:</strong> {{ movimiento.bodega_origen }} | <strong>Bodega destino:</strong> {{ movimiento.bodega_destino }}</p>
+    <p><strong>Proveedor:</strong> {{ movimiento.proveedor }} | <strong>Notas:</strong> {{ movimiento.notas }}</p>
+
+    <h5>Items</h5>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Lote</th>
+                <th>Cantidad</th>
+                <th>Precio unit.</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for it in items %}
+            <tr>
+                <td>{{ it.producto }}</td>
+                <td>{{ it.lote }}</td>
+                <td>{{ it.cantidad }}</td>
+                <td>{{ it.precio_unitario }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4">Sin items</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'inventory_list' %}" class="btn btn-secondary">Volver</a>
+</div>
+{% endblock %}

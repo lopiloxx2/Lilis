@@ -25,14 +25,18 @@
                 </div>
                 <button type="submit" class="btn btn-warning w-100">Entrar</button>
             </form>
-
+            <div class="mt-2 text-end">
+                <a href="{% url 'forgot_password' %}">Olvidé mi contraseña</a>
+            </div>
             <div class="mt-3 text-center">
-                <p class="mb-1">
-                    <a href="javascript:void(0)">¿Olvidaste tu usuario o contraseña?</a>
-                </p>
-                <p>
-                    <a href="{% url 'login_registro' %}">Crear nuevo usuario →</a>
-                </p>
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-3">
+                        <p class="mb-1 fw-bold">Credenciales de prueba (admin):</p>
+                        <p class="mb-0"><strong>Usuario:</strong> admin</p>
+                        <p class="mb-0"><strong>Contraseña:</strong> pass123</p>
+                        <small class="text-muted d-block mt-2">Estas credenciales son de prueba — elimínalas en producción.</small>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

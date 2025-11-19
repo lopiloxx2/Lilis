@@ -46,4 +46,8 @@ class ProveedorForm(forms.ModelForm):
         rut = self.cleaned_data.get('rut', '').strip()
         rut_sin_formato = rut.replace(".", "").replace("-", "").upper()
         validar_rut(rut_sin_formato)
-        return rut  # ← guarda el RUT como lo ingresó el usuario
+        # Normalizar el RUT a formato sin puntos y con guion antes del dígito verificador
+        cuerpo = rut_sin_formato[:-1]
+        dv = rut_sin_formato[-1]
+        normalized = f"{cuerpo}-{dv}"
+        return normalized

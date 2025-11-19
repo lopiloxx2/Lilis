@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Categoria, Producto, Usuario, Venta, DetalleVenta
+from .models import Bodega, Lote, InventoryMovement, MovementItem
 
 
 @admin.register(Categoria)
@@ -31,3 +32,30 @@ class DetalleVentaInline(admin.TabularInline):
 class VentaAdmin(admin.ModelAdmin):
     list_display = ('id', 'fecha', 'total')
     inlines = [DetalleVentaInline]
+
+
+@admin.register(Bodega)
+class BodegaAdmin(admin.ModelAdmin):
+    list_display = ('nombre', 'descripcion')
+
+
+@admin.register(Lote)
+class LoteAdmin(admin.ModelAdmin):
+    list_display = ('producto', 'codigo_lote', 'cantidad', 'fecha_vencimiento', 'proveedor')
+    list_filter = ('producto',)
+
+
+class MovementItemInline(admin.TabularInline):
+    model = MovementItem
+    extra = 1
+
+
+@admin.register(InventoryMovement)
+class InventoryMovementAdmin(admin.ModelAdmin):
+    list_display = ('tipo', 'fecha', 'usuario', 'proveedor', 'bodega_origen', 'bodega_destino')
+    inlines = [MovementItemInline]
+
+
+@admin.register(MovementItem)
+class MovementItemAdmin(admin.ModelAdmin):
+    list_display = ('movimiento', 'producto', 'lote', 'cantidad', 'precio_unitario')

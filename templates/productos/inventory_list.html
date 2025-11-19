@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <div class="card p-3">
+                <small class="text-muted">Movimientos (hoy)</small>
+                <h4 class="mt-2">{{ movimientos_hoy }}</h4>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3">
+                <small class="text-muted">Stock total demo</small>
+                <h4 class="mt-2">{{ stock_total_demo }}</h4>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3">
+                <small class="text-muted">Productos únicos</small>
+                <h4 class="mt-2">{{ productos_unicos }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <strong>Registrar movimiento</strong>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-3 mb-2">
+                        <label class="form-label">Fecha</label>
+                        <input type="text" class="form-control" value="{{ now|default:None }}" disabled>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label class="form-label">Tipo</label>
+                        <select name="tipo" class="form-select">
+                            <option value="INGRESO">Ingreso</option>
+                            <option value="SALIDA">Salida</option>
+                            <option value="AJUSTE">Ajuste</option>
+                            <option value="DEVOLUCION">Devolución</option>
+                            <option value="TRANSFERENCIA">Transferencia</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label class="form-label">Cantidad</label>
+                        <input type="number" name="cantidad" class="form-control" step="1">
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label class="form-label">Precio unit.</label>
+                        <input type="number" name="precio_unitario" class="form-control" step="0.01">
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">Producto</label>
+                        <select name="producto" class="form-select">
+                            <option value="">Seleccione...</option>
+                            {% for p in productos %}
+                                <option value="{{ p.id }}">{{ p.sku }} - {{ p.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">Proveedor</label>
+                        <select name="proveedor" class="form-select">
+                            <option value="">Ninguno</option>
+                            {% for prov in proveedores %}
+                                <option value="{{ prov.id }}">{{ prov.rut }} - {{ prov.razon_social }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">Bodega</label>
+                        <select name="bodega" class="form-select">
+                            <option value="">Seleccione...</option>
+                            {% for b in bodegas %}
+                                <option value="{{ b.id }}">{{ b.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">Lote (código)</label>
+                        <input type="text" name="lote" class="form-control">
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <label class="form-label">Referencia</label>
+                        <input type="text" name="referencia" class="form-control">
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end mb-2">
+                        <button class="btn btn-primary me-2" type="submit">Guardar movimiento</button>
+                        <button class="btn btn-secondary" type="reset">Limpiar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <strong>Movimientos</strong>
+            <div>
+                <input class="form-control form-control-sm d-inline-block" style="width:220px" placeholder="Buscar por SKU, prod">
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Tipo</th>
+                        <th>SKU</th>
+                        <th>Proveedor</th>
+                        <th>Bodega</th>
+                        <th>Cantidad</th>
+                        <th>Lote</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in movimientos %}
+                        {% for it in m.items.all %}
+                        <tr>
+                            <td>{{ m.fecha|date:"Y-m-d H:i" }}</td>
+                            <td>{{ m.get_tipo_display }}</td>
+                            <td>{{ it.producto.sku }}</td>
+                            <td>{{ m.proveedor }}</td>
+                            <td>{{ m.bodega_origen|default:m.bodega_destino }}</td>
+                            <td>{{ it.cantidad }}</td>
+                            <td>{{ it.lote }}</td>
+                            <td>
+                                <a href="{% url 'inventory_detail' m.id %}" class="btn btn-sm btn-primary">Ver</a>
+                                <a href="#" class="btn btn-sm btn-danger">Eliminar</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% empty %}
+                        <tr><td colspan="8" class="text-center py-4">No hay movimientos registrados.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

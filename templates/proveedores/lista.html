@@ -1,84 +1,100 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>ERP Lili's - Lista de Proveedores</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    {% load static %}
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Lista de Proveedores</h2>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-
-    <style>
-        :root { --rojo-lilis: #b71c1c; --dorado-lilis: #d4af37; }
-        html, body { height: 100%; margin: 0; display: flex; flex-direction: column; }
-        .navbar { background-color: var(--rojo-lilis); }
-        .navbar-brand, .nav-link, .navbar-text { color: var(--dorado-lilis) !important; font-weight: bold; }
-        .nav-link:hover { color: #fff !important; }
-        main { flex: 1; }
-        footer { background-color: var(--rojo-lilis); color: var(--dorado-lilis); padding: 1rem; text-align: center; }
-    </style>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <a class="navbar-brand d-flex align-items-center" href="{% url 'lista_proveedores' %}">
-                <img src="{% static 'img/lilis_logo.png' %}" alt="Lili's Logo" width="40" height="40" class="me-2">
-                Lili's
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_proveedores' %}">Proveedores</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_usuarios' %}">Usuarios</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_ventas' %}">Ventas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_productos' %}">Productos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'login_registro' %}">Iniciar sesión</a></li>
-                </ul>
-            </div>
+    <form class="mb-3">
+        <div class="input-group">
+            <input
+                type="text"
+                name="q"
+                value="{{ query }}"
+                class="form-control"
+                placeholder="Buscar por RUT o Razón Social"
+                hx-get="{% url 'lista_proveedores' %}"
+                hx-trigger="keyup changed delay:300ms"
+                hx-target="#grid">
         </div>
-    </nav>
-
-    <main class="container mt-4">
-        <h2>Lista de Proveedores</h2>
-
-        <!-- Form HTMX: trigger en el form, no en el input -->
-        <form class="mb-3">
-  <div class="input-group">
-    <input
-      type="text"
-      name="q"
-      value="{{ query }}"
-      class="form-control"
-      placeholder="Buscar por RUT o Razón Social"
-      hx-get="{% url 'lista_proveedores' %}"
-      hx-trigger="keyup changed delay:300ms"
-      hx-target="#grid">
-  </div>
-</form>
-
+    </form>
 
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <a href="{% url 'crear_proveedor' %}" class="btn btn-success">Nuevo Proveedor</a>
-            <a href="{% url 'exportar_proveedores_excel' %}?q={{ query }}" class="btn btn-outline-primary">Exportar a Excel</a>
+                <div>
+                        <a href="{% url 'crear_proveedor' %}" class="btn btn-success">Nuevo Proveedor</a>
+                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#bulkCreateModal" style="margin-left:8px">Carga masiva</button>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#bulkClearModal" style="margin-left:8px">Vaciar datos de prueba</button>
+                </div>
+                <a href="#" data-export-url="{% url 'exportar_proveedores_excel' %}" class="btn btn-outline-primary export-btn">Exportar a Excel</a>
         </div>
 
-        <!-- Grilla que se reemplaza -->
-        <div id="grid" hx-swap="outerHTML">
-            {% include 'proveedores/_grid.html' with page_obj=page_obj query=query %}
+        <!-- Bulk create modal -->
+        <div class="modal fade" id="bulkCreateModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" action="{% url 'bulk_create_proveedores' %}">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h5 class="modal-title">Carga masiva de proveedores</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Cantidad</label>
+                                <input type="number" name="count" value="1000" min="1" max="20000" class="form-control">
+                            </div>
+                            <p class="small text-muted">Se crearán proveedores de prueba con datos sintéticos. Esta operación puede tardar.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-warning">Confirmar carga</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
 
-        <div class="text-center mt-4">
-            <a href="{% url 'inicio' %}" class="btn btn-secondary">⬅️ Volver al Inicio</a>
+        <!-- Bulk clear modal -->
+        <div class="modal fade" id="bulkClearModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" action="{% url 'bulk_delete_proveedores' %}">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h5 class="modal-title">Vaciar datos de prueba</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>¿Desea eliminar los proveedores generados por la carga masiva (Proveedor de Prueba / @example.com)?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-    </main>
 
-    {% include 'partials/footer.html' %}
+    <div id="grid" hx-swap="innerHTML">
+        {% include 'proveedores/_grid.html' with page_obj=page_obj query=query %}
+    </div>
+    <script>
+    (function(){
+        const exportBtn = document.querySelector('.export-btn');
+        if(!exportBtn) return;
+        exportBtn.addEventListener('click', function(e){
+            e.preventDefault();
+            const base = this.getAttribute('data-export-url');
+            const qInput = document.querySelector('input[name="q"]');
+            const q = qInput ? encodeURIComponent(qInput.value || '') : '';
+            const url = q ? `${base}?q=${q}` : base;
+            window.location.href = url;
+        });
+    })();
+    </script>
 
-    <!-- Scripts mínimos -->
-    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    <div class="text-center mt-4">
+        <a href="{% url 'inicio' %}" class="btn btn-secondary">⬅️ Volver al Inicio</a>
+    </div>
+</div>
+{% endblock %}
