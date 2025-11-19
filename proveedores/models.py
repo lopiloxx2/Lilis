@@ -33,7 +33,7 @@ def validar_rut(rut):
 
 class Proveedor(models.Model):
     rut = models.CharField(max_length=15, blank=False, null=False)
-    razon_social = models.CharField(max_length=255, blank=True, null=True)
+    razon_social = models.CharField(max_length=255, blank=False, null=False)
     nombre_fantasia = models.CharField(max_length=255, blank=True, null=True)
     email = models.EmailField()
     telefono = models.CharField(max_length=20, blank=True, null=True, validators=[solo_numeros])
