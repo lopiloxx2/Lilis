@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
+
 def login_registro_view(request):
     if request.method == 'POST':
         action = request.POST.get('action')
