@@ -24,7 +24,7 @@
     </div>
 
     <!-- Grilla -->
-    <div id="grid_usuarios" hx-swap="outerHTML">
+    <div id="grid_usuarios" hx-swap="innerHTML">
         {% include 'usuarios/_grid_usuarios.html' with page_obj=page_obj query=query %}
     </div>
 </div>
