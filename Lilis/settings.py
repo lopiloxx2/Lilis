@@ -57,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "django_htmx.middleware.HtmxMiddleware",
+    'login.middleware.PasswordChangeRequiredMiddleware',
 ]
 
 ROOT_URLCONF = 'Lilis.urls'
@@ -165,6 +166,38 @@ STATICFILES_DIRS = [STATIC_DIR]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+<<<<<<< HEAD
 # Login settings
 LOGIN_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+=======
+
+# -----------------------------------------------------------------------------
+# Security: cookie settings
+# - `HttpOnly` evita acceso desde JavaScript (recomendado para cookies de sesión).
+# - `Secure` obliga a enviar la cookie sólo por HTTPS (activar en producción).
+# - `SameSite` ayuda a mitigar CSRF en peticiones cross-site ('Lax' es un buen balance).
+# Ajustamos de forma condicional según `DEBUG` para evitar romper el desarrollo local.
+# -----------------------------------------------------------------------------
+
+# Recomendación: en producción `DEBUG` debe ser False y el sitio servido por HTTPS.
+SESSION_COOKIE_HTTPONLY = True
+# Marcar `Secure` sólo si no estamos en modo DEBUG (es decir, producción con HTTPS)
+SESSION_COOKIE_SECURE = not DEBUG
+# Opciones: 'Lax' (recomendado), 'Strict' o 'None' (si usas cross-site cookies con OAuth)
+SESSION_COOKIE_SAMESITE = 'Lax'
+
+# CSRF cookie: mantener accesible a JS si tu frontend la necesita; por seguridad mantenemos
+# `Secure` sincronizado con `SESSION_COOKIE_SECURE` y `SameSite` en 'Lax'.
+CSRF_COOKIE_SECURE = not DEBUG
+# No poner CSRF_COOKIE_HTTPONLY = True salvo que no necesites leer el token en JS
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SAMESITE = 'Lax'
+
+# Otras cabeceras de seguridad útiles
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Si quieres redirigir HTTP -> HTTPS en producción descomenta la siguiente línea
+# SECURE_SSL_REDIRECT = not DEBUG
+>>>>>>> 86146f456b485dd03b4ef19c8fee35d8540bd50e

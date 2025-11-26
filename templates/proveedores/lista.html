@@ -27,6 +27,7 @@
                 <a href="#" data-export-url="{% url 'exportar_proveedores_excel' %}" class="btn btn-outline-primary export-btn">Exportar a Excel</a>
         </div>
 
+<<<<<<< HEAD
         <!-- Bulk create modal -->
         <div class="modal fade" id="bulkCreateModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
@@ -51,6 +52,11 @@
                     </form>
                 </div>
             </div>
+=======
+        <!-- Grilla que se reemplaza -->
+        <div id="grid" hx-swap="innerHTML">
+            {% include 'proveedores/_grid.html' with page_obj=page_obj query=query %}
+>>>>>>> 86146f456b485dd03b4ef19c8fee35d8540bd50e
         </div>
 
         <!-- Bulk clear modal -->

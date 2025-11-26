@@ -49,12 +49,54 @@ from django.db.utils import IntegrityError
 from productos.models import Producto, Categoria
 from django.utils import timezone
 from decimal import Decimal
+from proveedores.models import Proveedor
 
 lock = threading.Lock()
 
 def gen_sku(prefix):
     suf = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
     return f"{prefix}{suf}"
+
+
+def _compute_rut_dv(cuerpo: str) -> str:
+    """Computa el dígito verificador según la misma lógica usada en `validar_rut` del proyecto."""
+    suma = 0
+    multiplo = 2
+    for c in reversed(cuerpo):
+        suma += int(c) * multiplo
+        # replicar exactamente la lógica del validador existente
+        multiplo = 9 if multiplo == 7 else multiplo + 1
+
+    resto = suma % 11
+    digito = 11 - resto
+    if digito == 11:
+        return '0'
+    if digito == 10:
+        return 'K'
+    return str(digito)
+
+
+def _format_rut(cuerpo: str, dv: str) -> str:
+    """Formatea el RUT con puntos de miles y guión antes del DV: 12.345.678-5"""
+    # eliminar cualquier cero a la izquierda innecesario
+    cuerpo = str(int(cuerpo))
+    parts = []
+    while cuerpo:
+        parts.append(cuerpo[-3:])
+        cuerpo = cuerpo[:-3]
+    formatted = '.'.join(reversed(parts))
+    return f"{formatted}-{dv}"
+
+
+def _gen_rut_numeric(existing: set, length: int = 8) -> str:
+    """Genera un cuerpo numérico para RUT garantizando no colisión con `existing`"""
+    while True:
+        cuerpo = ''.join(random.choices('0123456789', k=length))
+        if cuerpo[0] == '0':
+            cuerpo = cuerpo.lstrip('0') or '1'
+        if cuerpo not in existing:
+            existing.add(cuerpo)
+            return cuerpo
 
 
 def seed_products(n, prefix):
@@ -110,6 +152,69 @@ def seed_products(n, prefix):
     # Mostrar cuántos productos con el prefijo existen ahora
     total_with_prefix = Producto.objects.filter(sku__startswith=prefix).count()
     print(f"Productos con prefijo '{prefix}' en BD: {total_with_prefix}")
+
+
+def seed_proveedores(n, prefix: str = ''):
+    """Crea `n` proveedores con RUTs válidos formateados (ej: 12.345.678-5).
+    Usa `bulk_create` por lotes. `prefix` no se antepone al RUT numérico (se usa
+    para filtrar si lo deseas), por defecto vacío.
+    """
+    objs = []
+    batch_size = 1000
+    created = 0
+    paises = ['Chile', 'Argentina', 'Peru', 'Mexico', 'Colombia']
+    ciudades = ['Santiago', 'Valparaiso', 'Concepcion', 'La Serena', 'Antofagasta']
+    existing_bodies = set()
+    for i in range(n):
+        # Generar cuerpo numérico único y su DV compatible con validar_rut
+        cuerpo = _gen_rut_numeric(existing_bodies, length=8)
+        dv = _compute_rut_dv(cuerpo)
+        rut_formatted = _format_rut(cuerpo, dv)
+
+        razon = f"Proveedor {rut_formatted}"
+        nombre_f = f"Fantasia {rut_formatted}"
+        email = f"{cuerpo}@example.com"
+        telefono = ''.join(random.choices('0123456789', k=9))
+        direccion = f"Calle {random.randint(1,999)}"
+        ciudad = random.choice(ciudades)
+        pais = random.choice(paises)
+        plazos = f"{random.choice([7,15,30,60])} días"
+        moneda = random.choice(['CLP','USD','ARS','PEN'])
+        descuentos = Decimal(str(round(random.uniform(0,20),2)))
+        costo_promedio = Decimal(str(round(random.uniform(10,1000),2)))
+        lead_time = random.randint(1,60)
+        preferente = random.random() < 0.05
+
+        p = Proveedor(
+            rut=rut_formatted,
+            razon_social=razon,
+            nombre_fantasia=nombre_f,
+            email=email,
+            telefono=telefono,
+            direccion=direccion,
+            ciudad=ciudad,
+            pais=pais,
+            plazos_pago=plazos,
+            moneda=moneda,
+            descuentos=descuentos,
+            costo_promedio=costo_promedio,
+            lead_time=lead_time,
+            proveedor_preferente=preferente,
+        )
+        objs.append(p)
+        if len(objs) >= batch_size:
+            Proveedor.objects.bulk_create(objs, batch_size=batch_size)
+            created += len(objs)
+            print(f"  Seeded proveedores {created}/{n}")
+            objs = []
+    if objs:
+        Proveedor.objects.bulk_create(objs, batch_size=batch_size)
+        created += len(objs)
+        print(f"  Seeded proveedores {created}/{n}")
+
+    # Verificación: contar proveedores creados por email domain (marca del script)
+    total = Proveedor.objects.filter(email__endswith='@example.com').count()
+    print(f"Seed completo: {created} proveedores creados. Total en BD con email @example.com: {total}")
 
 def create_product(prefix):
     sku = gen_sku(prefix)
@@ -225,6 +330,7 @@ def main():
     parser.add_argument('--delete-ratio', type=int, default=10, help='Porcentaje relativo para borrar (por defecto 10)')
     parser.add_argument('--sleep', type=float, default=0.0, help='Esperar segundos entre operaciones en cada hilo (opcional)')
     parser.add_argument('--seed', type=int, default=0, help='Si >0: crea N productos con el prefijo y sale (útil para pre-seed)')
+    parser.add_argument('--seed-proveedores', type=int, default=0, help='Si >0: crea N proveedores y sale (útil para pre-seed)')
 
     args = parser.parse_args()
 
@@ -232,6 +338,11 @@ def main():
     if args.seed and args.seed > 0:
         print(f"Iniciando seed de {args.seed} productos con prefijo '{args.prefix}'...")
         seed_products(args.seed, args.prefix)
+        return
+    if args.seed_proveedores and args.seed_proveedores > 0:
+        print(f"Iniciando seed de {args.seed_proveedores} proveedores con prefijo 'SUP-'...")
+        # permitir prefijo opcional igual al de productos o otro
+        seed_proveedores(args.seed_proveedores, prefix='SUP-')
         return
 
     ratios = {

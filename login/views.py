@@ -70,6 +70,7 @@ def change_password_view(request):
 
     return render(request, 'login/change_password.html')
 
+
 def login_registro_view(request):
     if request.method == 'POST':
         action = request.POST.get('action')

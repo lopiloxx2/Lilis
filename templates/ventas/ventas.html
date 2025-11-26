@@ -21,7 +21,7 @@
         <a href="{% url 'inicio' %}" class="btn btn-secondary">Volver al Inicio</a>
     </div>
 
-    <div id="grid_ventas" hx-swap="outerHTML">
+    <div id="grid_ventas" hx-swap="innerHTML">
         {% include 'ventas/_grid_ventas.html' with page_obj=page_obj query=query %}
     </div>
 </div>
