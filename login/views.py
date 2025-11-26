@@ -9,6 +9,8 @@ from django.contrib import auth
 from django.http import HttpResponseRedirect
 from django.core.mail import send_mail
 from django.conf import settings
+import logging
+import smtplib
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
@@ -140,8 +142,15 @@ def forgot_password_view(request):
                 "Si usted no solicitó este cambio, ignore este correo."
             )
             from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'no-reply@example.com')
-            # For testing, send to your address as requested
-            send_mail(subject, message, from_email, ['contrerasb3njamin@gmail.com'], fail_silently=True)
+            # Send reset link to the user's registered email address when available.
+            if user.email:
+                try:
+                    send_mail(subject, message, from_email, [user.email], fail_silently=getattr(settings, 'EMAIL_FAIL_SILENTLY', True))
+                except smtplib.SMTPException as e:
+                    logger = logging.getLogger(__name__)
+                    logger.exception("Error enviando correo de recuperación de contraseña: %s", e)
+                    if not getattr(settings, 'EMAIL_FAIL_SILENTLY', True):
+                        messages.warning(request, 'Se generó el token de recuperación, pero no se pudo enviar el correo (problema SMTP).')
 
         # Always respond with success message to avoid account enumeration
         messages.success(request, 'Si existe una cuenta asociada, se ha enviado un correo con instrucciones.')

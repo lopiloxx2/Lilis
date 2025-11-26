@@ -1,6 +1,19 @@
 from pathlib import Path
 import os
 
+# Load environment variables from a local .env file when present to
+# make it easy to persist SMTP and other secrets for development.
+try:
+    # python-dotenv is optional in production; if missing, continue using os.environ
+    from dotenv import load_dotenv
+    DOTENV_PATH = Path(__file__).resolve().parent.parent / '.env'
+    if DOTENV_PATH.exists():
+        load_dotenv(DOTENV_PATH)
+except Exception:
+    # If python-dotenv isn't installed, we silently continue — env vars can
+    # still be provided through the environment as before.
+    pass
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -84,8 +97,31 @@ DATABASES = {
     }
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'no-reply@example.com'
+# Composite backend: sends via SMTP and also prints emails to console for local testing.
+# Configure SMTP credentials using environment variables described below.
+EMAIL_BACKEND = 'Lilis.email_backends.ConsoleAndSMTPBackend'
+
+# SMTP settings (read from environment for security). Example env vars:
+# SMTP_HOST=smtp.gmail.com
+# SMTP_PORT=587
+# SMTP_USER=your_smtp_user
+# SMTP_PASSWORD=your_smtp_password_or_app_password
+# SMTP_USE_TLS=True
+# SMTP_USE_SSL=False
+EMAIL_HOST = os.environ.get('SMTP_HOST', 'smtp.gmail.com')
+EMAIL_PORT = int(os.environ.get('SMTP_PORT', 587))
+EMAIL_HOST_USER = os.environ.get('SMTP_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('SMTP_PASSWORD', '')
+EMAIL_USE_TLS = os.environ.get('SMTP_USE_TLS', 'True') == 'True'
+EMAIL_USE_SSL = os.environ.get('SMTP_USE_SSL', 'False') == 'True'
+EMAIL_FAIL_SILENTLY = os.environ.get('SMTP_FAIL_SILENTLY', 'False') == 'True'
+EMAIL_TIMEOUT = int(os.environ.get('SMTP_TIMEOUT', '10'))
+
+# Default from email: if not explicitly set, use the SMTP user (helps with providers
+# like Gmail that require the From to match the authenticated account).
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL') or EMAIL_HOST_USER or 'no-reply@example.com'
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

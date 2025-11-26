@@ -8,6 +8,8 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.core.mail import send_mail
 from django.conf import settings
+import logging
+import smtplib
 import openpyxl
 from openpyxl.utils import get_column_letter
 from .forms import UsuarioForm 
@@ -405,7 +407,16 @@ def crear_usuario(request):
                 "Al primer ingreso se le pedirá cambiar la contraseña."
             )
             from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'no-reply@example.com')
-            send_mail(subject, message, from_email, ['contrerasb3njamin@gmail.com'], fail_silently=True)
+            # Send to the user's email if available; otherwise, don't attempt SMTP send.
+            if usuario.email:
+                try:
+                    send_mail(subject, message, from_email, [usuario.email], fail_silently=getattr(settings, 'EMAIL_FAIL_SILENTLY', True))
+                except smtplib.SMTPException as e:
+                    logger = logging.getLogger(__name__)
+                    logger.exception("Error enviando correo de creación de usuario: %s", e)
+                    # Show a friendly message to the admin unless configured to be silent
+                    if not getattr(settings, 'EMAIL_FAIL_SILENTLY', True):
+                        messages.warning(request, 'Usuario creado, pero no se pudo enviar el correo (problema con SMTP). Revise la configuración de correo.')
             # Store the generated credentials in session and redirect to confirmation page.
             request.session['new_user_info'] = {'username': usuario.username, 'email': usuario.email, 'contrasena': contrasena}
             return redirect('usuario_confirmacion')
@@ -447,7 +458,14 @@ def admin_reset_password(request, pk):
         "Al ingresar se solicitará cambiar la contraseña."
     )
     from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', 'no-reply@example.com')
-    send_mail(subject, message, from_email, ['contrerasb3njamin@gmail.com'], fail_silently=True)
+    if usuario.email:
+        try:
+            send_mail(subject, message, from_email, [usuario.email], fail_silently=getattr(settings, 'EMAIL_FAIL_SILENTLY', True))
+        except smtplib.SMTPException as e:
+            logger = logging.getLogger(__name__)
+            logger.exception("Error enviando correo de reset de contraseña: %s", e)
+            if not getattr(settings, 'EMAIL_FAIL_SILENTLY', True):
+                messages.warning(request, 'Se genero la contraseña pero no se pudo enviar el correo de notificación (problema SMTP).')
 
     messages.success(request, 'Se generó una nueva contraseña temporal y se envió un correo.')
     return redirect('lista_usuarios')
